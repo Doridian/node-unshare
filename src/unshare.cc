@@ -1,8 +1,9 @@
 #include <sched.h>
 #include <v8.h>
+#include <node.h>
 #include <errno.h>
 
-v8::Handle<v8::Value> Mount(const v8::Arguments &args) {
+v8::Handle<v8::Value> Unshare(const v8::Arguments &args) {
   v8::HandleScope scope;
 
   if (args.Length() != 1) {
@@ -34,3 +35,8 @@ v8::Handle<v8::Value> Mount(const v8::Arguments &args) {
   
   return v8::Local<v8::Value>::New(v8::Boolean::New(unshare(mask) == 0));
 }
+
+void init (v8::Handle<v8::Object> exports, v8::Handle<v8::Object> module) {
+  exports->Set(v8::String::NewSymbol("unshare"), v8::FunctionTemplate::New(Unshare)->GetFunction());
+}
+NODE_MODULE(mount, init)
