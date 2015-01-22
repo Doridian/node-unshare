@@ -1,0 +1,18 @@
+{
+  "name": "unshare",
+  "version": "0.0.1",
+  "description": "Unshare syscall for NodeJS",
+  "main": "./lib/unshare",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Doridian/node-unshare.git"
+  },
+  "keywords": [
+    "linux"
+  ],
+  "author": "Mark Dietzer",
+  "license": "GPLv3",
+  "bugs": {
+    "url": "https://github.com/Doridian/node-unshare/issues"
+  }
+}
