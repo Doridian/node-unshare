@@ -1,6 +1,6 @@
 {
   "name": "unshare",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Unshare syscall for NodeJS",
   "main": "./lib/unshare",
   "repository": {

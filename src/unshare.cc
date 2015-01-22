@@ -33,7 +33,13 @@ v8::Handle<v8::Value> Unshare(const v8::Arguments &args) {
 	}
   }
   
-  return v8::Local<v8::Value>::New(v8::Boolean::New(unshare(mask) == 0));
+  int unshareNum = unshare(mask);
+  
+  bool unshareAction = (unshareNum == 0) ? true : false;
+
+  v8::Local<v8::Value> unshared = v8::Local<v8::Value>::New(v8::Boolean::New(unshareAction));
+  
+  return unshared;
 }
 
 void init (v8::Handle<v8::Object> exports, v8::Handle<v8::Object> module) {
