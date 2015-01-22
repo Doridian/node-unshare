@@ -39,4 +39,4 @@ v8::Handle<v8::Value> Unshare(const v8::Arguments &args) {
 void init (v8::Handle<v8::Object> exports, v8::Handle<v8::Object> module) {
   exports->Set(v8::String::NewSymbol("unshare"), v8::FunctionTemplate::New(Unshare)->GetFunction());
 }
-NODE_MODULE(mount, init)
+NODE_MODULE(unshare, init)
