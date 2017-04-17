@@ -1,39 +1,40 @@
 #include <sched.h>
-#include <v8.h>
 #include <node.h>
 #include <errno.h>
 
-v8::Handle<v8::Value> Unshare(const v8::Arguments &args) {
-  v8::HandleScope scope;
+namespace {
+
+void Unshare(const v8::FunctionCallbackInfo<v8::Value>& args) {
+  v8::Isolate* isolate = args.GetIsolate();
 
   if (args.Length() != 1) {
     // TODO: make it raise a proper exception
-    return v8::ThrowException(v8::String::New("`unshare` needs 1 parameter"));
+    isolate->ThrowException(v8::Exception::TypeError(
+        v8::String::NewFromUtf8(isolate, "`unshare` needs 1 parameter")));
+    return;
   }
 
-  int mask = args[0]->ToInt32()->Value();
+  int mask = args[0]->ToInt32(isolate)->Value();
 
   int unshareNum = unshare(mask);
 
   bool unshareAction = (unshareNum == 0) ? true : false;
 
-  v8::Local<v8::Value> unshared = v8::Local<v8::Value>::New(v8::Boolean::New(unshareAction));
-
-  return scope.Close(unshared);
+  args.GetReturnValue().Set(v8::Boolean::New(isolate, unshareAction));
 }
 
-#define EXPORT_CONST(__NAME__) exports->Set(v8::String::NewSymbol(#__NAME__), v8::Int32::New(__NAME__), v8::ReadOnly)
+void init (v8::Local<v8::Object> exports) {
+  NODE_SET_METHOD(exports, "unshare", Unshare);
 
-void init (v8::Handle<v8::Object> exports, v8::Handle<v8::Object> module) {
-  exports->Set(v8::String::NewSymbol("unshare"), v8::FunctionTemplate::New(Unshare)->GetFunction());
+  NODE_DEFINE_CONSTANT(exports, CLONE_NEWNS);
+  NODE_DEFINE_CONSTANT(exports, CLONE_NEWIPC);
+  NODE_DEFINE_CONSTANT(exports, CLONE_NEWNET);
+  NODE_DEFINE_CONSTANT(exports, CLONE_NEWUTS);
+  NODE_DEFINE_CONSTANT(exports, CLONE_SYSVSEM);
 
-  EXPORT_CONST(CLONE_NEWNS);
-  EXPORT_CONST(CLONE_NEWIPC);
-  EXPORT_CONST(CLONE_NEWNET);
-  EXPORT_CONST(CLONE_NEWUTS);
-  EXPORT_CONST(CLONE_SYSVSEM);
-
-  EXPORT_CONST(CLONE_FS);
-  EXPORT_CONST(CLONE_FILES);
+  NODE_DEFINE_CONSTANT(exports, CLONE_FS);
+  NODE_DEFINE_CONSTANT(exports, CLONE_FILES);
 }
 NODE_MODULE(unshare, init)
+
+}
